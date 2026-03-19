@@ -21,13 +21,18 @@ jobs:
       - name: 🎯 Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0' # Фиксируем версию
+          flutter-version: '3.22.0'
+          channel: 'stable'
 
       - name: 📦 Get dependencies
         run: flutter pub get
 
-      - name: 🔨 Clean Build
-        run: flutter clean
-
       - name: 🔧 Build APK
         run: flutter build apk --release --no-tree-shake-icons
+
+      - name: 📤 Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: phoenix-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
