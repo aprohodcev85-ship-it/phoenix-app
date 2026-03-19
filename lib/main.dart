@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'routes.dart';
 
 void main() {
-  // Убираем всю инициализацию Firebase
-  WidgetsFlutterBinding.ensureInitialized();
   runApp(const PhoenixApp());
 }
 
@@ -16,8 +14,7 @@ class PhoenixApp extends StatelessWidget {
       title: 'Phoenix',
       debugShowCheckedModeBanner: false,
       routerConfig: appRouter,
-      // Упрощаем тему, чтобы не было зависимостей
-      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+      theme: ThemeData(useMaterial3: true, fontFamily: 'Arial'),
     );
   }
 }
