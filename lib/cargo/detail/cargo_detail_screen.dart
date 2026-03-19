@@ -67,7 +67,8 @@ class _CargoDetailScreenState extends State<CargoDetailScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1E3A5F),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Предложить цену', style: TextStyle(color: Colors.white)),
+        title: const Text('Предложить цену',
+            style: TextStyle(color: Colors.white)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -98,11 +99,13 @@ class _CargoDetailScreenState extends State<CargoDetailScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена', style: TextStyle(color: Colors.white70)),
+            child:
+                const Text('Отмена', style: TextStyle(color: Colors.white70)),
           ),
           ElevatedButton(
             onPressed: _submitOffer,
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF6B35)),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFF6B35)),
             child: const Text('Отправить'),
           ),
         ],
@@ -136,12 +139,6 @@ class _CargoDetailScreenState extends State<CargoDetailScreen> {
     final repository = OfferRepository();
     await repository.saveOffer(offer);
 
-    // Уведомление
-    // NotificationService.showLocalNotification(
-      'Новый отклик',
-      'Предложена цена ${price.toInt()} ₽ на груз №${widget.cargoId}',
-    );
-
     if (!mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -163,7 +160,8 @@ class _CargoDetailScreenState extends State<CargoDetailScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.pop(),
         ),
-        title: const Text('Детали груза', style: TextStyle(color: Colors.white)),
+        title:
+            const Text('Детали груза', style: TextStyle(color: Colors.white)),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: Colors.white))
@@ -172,28 +170,52 @@ class _CargoDetailScreenState extends State<CargoDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(_cargo!['title'], style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700)),
+                  Text(_cargo!['title'],
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700)),
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      Container(width: 10, height: 10, decoration: const BoxDecoration(color: Color(0xFF3498DB), shape: BoxShape.circle)),
+                      Container(
+                          width: 10,
+                          height: 10,
+                          decoration: const BoxDecoration(
+                              color: Color(0xFF3498DB),
+                              shape: BoxShape.circle)),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(_cargo!['from'], style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+                            Text(_cargo!['from'],
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600)),
                             const SizedBox(height: 8),
-                            Text(_cargo!['to'], style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+                            Text(_cargo!['to'],
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600)),
                           ],
                         ),
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(_cargo!['price'], style: const TextStyle(color: Color(0xFFFF6B35), fontSize: 20, fontWeight: FontWeight.w700)),
+                          Text(_cargo!['price'],
+                              style: const TextStyle(
+                                  color: Color(0xFFFF6B35),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700)),
                           const SizedBox(height: 4),
-                          Text(_cargo!['distance'], style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 14)),
+                          Text(_cargo!['distance'],
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.6),
+                                  fontSize: 14)),
                         ],
                       ),
                     ],
@@ -206,11 +228,23 @@ class _CargoDetailScreenState extends State<CargoDetailScreen> {
                     _chip(Icons.local_shipping, _cargo!['type']),
                   ]),
                   const SizedBox(height: 16),
-                  const Text('Описание', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
+                  const Text('Описание',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700)),
                   const SizedBox(height: 8),
-                  Text(_cargo!['description'], style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 15, height: 1.6)),
+                  Text(_cargo!['description'],
+                      style: TextStyle(
+                          color: Colors.white.withOpacity(0.8),
+                          fontSize: 15,
+                          height: 1.6)),
                   const SizedBox(height: 24),
-                  const Text('Грузовладелец', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
+                  const Text('Грузовладелец',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700)),
                   const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -221,19 +255,33 @@ class _CargoDetailScreenState extends State<CargoDetailScreen> {
                     ),
                     child: Row(
                       children: [
-                        Container(width: 50, height: 50, decoration: const BoxDecoration(color: Color(0xFFFF6B35), shape: BoxShape.circle)),
+                        Container(
+                            width: 50,
+                            height: 50,
+                            decoration: const BoxDecoration(
+                                color: Color(0xFFFF6B35),
+                                shape: BoxShape.circle)),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(_cargo!['ownerName'], style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+                              Text(_cargo!['ownerName'],
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600)),
                               const SizedBox(height: 4),
                               Row(
                                 children: [
-                                  Icon(Icons.star, size: 16, color: Colors.yellow[700]),
+                                  Icon(Icons.star,
+                                      size: 16, color: Colors.yellow[700]),
                                   const SizedBox(width: 4),
-                                  Text('${_cargo!['ownerRating']} (${_cargo!['ownerDeals']} сделок)', style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14)),
+                                  Text(
+                                      '${_cargo!['ownerRating']} (${_cargo!['ownerDeals']} сделок)',
+                                      style: TextStyle(
+                                          color: Colors.white.withOpacity(0.7),
+                                          fontSize: 14)),
                                 ],
                               ),
                             ],
@@ -241,13 +289,20 @@ class _CargoDetailScreenState extends State<CargoDetailScreen> {
                         ),
                         if (_cargo!['isVerified'])
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(color: const Color(0xFF2ECC71).withOpacity(0.2), borderRadius: BorderRadius.circular(6)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                                color: const Color(0xFF2ECC71).withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(6)),
                             child: const Row(
                               children: [
-                                Icon(Icons.verified, size: 14, color: Color(0xFF2ECC71)),
+                                Icon(Icons.verified,
+                                    size: 14, color: Color(0xFF2ECC71)),
                                 SizedBox(width: 4),
-                                Text('Проверен', style: TextStyle(color: Color(0xFF2ECC71), fontSize: 12)),
+                                Text('Проверен',
+                                    style: TextStyle(
+                                        color: Color(0xFF2ECC71),
+                                        fontSize: 12)),
                               ],
                             ),
                           ),
@@ -266,20 +321,23 @@ class _CargoDetailScreenState extends State<CargoDetailScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFFF6B35),
                               minimumSize: const Size(0, 52),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
                             ),
                           ),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: ElevatedButton.icon(
-                            onPressed: () => context.push('/chat/cargo_${widget.cargoId}'),
+                            onPressed: () =>
+                                context.push('/chat/cargo_${widget.cargoId}'),
                             icon: const Icon(Icons.chat_bubble_outline),
                             label: const Text('Чат'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF3498DB),
                               minimumSize: const Size(0, 52),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
                             ),
                           ),
                         ),
@@ -292,7 +350,8 @@ class _CargoDetailScreenState extends State<CargoDetailScreen> {
                             style: OutlinedButton.styleFrom(
                               side: const BorderSide(color: Colors.white38),
                               minimumSize: const Size(0, 52),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
                             ),
                           ),
                         ),
@@ -318,7 +377,9 @@ class _CargoDetailScreenState extends State<CargoDetailScreen> {
         children: [
           Icon(icon, size: 16, color: Colors.white.withOpacity(0.7)),
           const SizedBox(width: 6),
-          Text(text, style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 13)),
+          Text(text,
+              style: TextStyle(
+                  color: Colors.white.withOpacity(0.7), fontSize: 13)),
         ],
       ),
     );
