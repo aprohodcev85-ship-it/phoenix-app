@@ -1,4 +1,4 @@
-name: Build Phoenix APK
+name: Build APK
 
 on:
   push:
@@ -8,41 +8,26 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
+      - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Java 17
+      - name: ☕ Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Flutter 3.22
+      - name: 🎯 Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
-          channel: 'stable'
+          flutter-version: '3.22.0' # Фиксируем версию
 
-      - name: Cache Flutter packages
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.pub-cache
-            .dart_tool
-          key: flutter-${{ runner.os }}-${{ hashFiles('pubspec.yaml') }}
-          restore-keys: flutter-${{ runner.os }}-
-
-      - name: Get dependencies
+      - name: 📦 Get dependencies
         run: flutter pub get
 
-      - name: Build release APK
-        run: flutter build apk --release
+      - name: 🔨 Clean Build
+        run: flutter clean
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: phoenix-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
-          retention-days: 30
+      - name: 🔧 Build APK
+        run: flutter build apk --release --no-tree-shake-icons
