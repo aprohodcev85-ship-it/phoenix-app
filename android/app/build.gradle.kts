@@ -9,9 +9,15 @@ android {
     compileSdk = 34
 
     compileOptions {
+        // Включаем поддержку Java 17 для всего проекта
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        // Kotlin тоже должен целеваться в Java 17
+        jvmTarget = "17"
     }
 
     defaultConfig {
