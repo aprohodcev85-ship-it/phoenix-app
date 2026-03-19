@@ -5,14 +5,17 @@ allprojects {
     }
 }
 
-rootProject.buildDir = "../build"
+// Современный способ установки build dir в Kotlin DSL
+rootProject.layout.buildDirectory.set(project.file("../build"))
+
 subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    project.layout.buildDirectory.set(project.file("${rootProject.layout.buildDirectory.get()}/${project.name}"))
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
 
 tasks.register<Delete>("clean") {
-    delete(rootProject.buildDir)
+    delete(rootProject.layout.buildDirectory)
 }

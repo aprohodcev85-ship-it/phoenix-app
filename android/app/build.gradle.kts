@@ -1,25 +1,12 @@
-import java.util.Properties
-import java.io.FileInputStream
-
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    // Важно: убираем id("dev.flutter.flutter-gradle-plugin")
+    id("dev.flutter.flutter-gradle-plugin")
 }
-
-// Загрузка local.properties
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-    localProperties.load(FileInputStream(localPropertiesFile))
-}
-
-val flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "1"
-val flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "1.0"
 
 android {
     namespace = "com.phoenix.app"
-    compileSdk = 34
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -29,15 +16,15 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
     defaultConfig {
         applicationId = "com.phoenix.app"
-        minSdk = 21
-        targetSdk = 34
-        versionCode = flutterVersionCode.toInt()
-        versionName = flutterVersionName
+        minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
     }
 
     buildTypes {
@@ -47,7 +34,6 @@ android {
     }
 }
 
-// Классическое подключение Flutter (самый стабильный способ)
 flutter {
     source = "../.."
 }
