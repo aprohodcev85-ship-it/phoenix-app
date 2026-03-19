@@ -9,14 +9,12 @@ android {
     compileSdk = 34
 
     compileOptions {
-        // Включаем поддержку Java 17 для всего проекта
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        // Kotlin тоже должен целеваться в Java 17
         jvmTarget = "17"
     }
 
@@ -30,11 +28,8 @@ android {
 
     buildTypes {
         release {
-            // Включаем сжатие кода
             isMinifyEnabled = true
-            // Теперь можно безопасно включить удаление ресурсов
             isShrinkResources = true
-            
             signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -49,5 +44,5 @@ flutter {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 }

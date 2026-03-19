@@ -6,6 +6,8 @@
 -keep class io.flutter.** { *; }
 -keep class * extends io.flutter.plugin.common.Plugin { *; }
 
-# Правила для библиотек (если используем)
--dontwarn com.google.common.**
--keep class com.google.errorprone.annotations.** { *; }
+# Правила для Google Play Core и Firebase
+-keep class com.google.android.play.core.** { *; }
+-keep class com.google.firebase.** { *; }
+-dontwarn com.google.android.play.core.**
+-dontwarn com.google.firebase.**
