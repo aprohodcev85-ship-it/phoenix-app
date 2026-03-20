@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'routes.dart';
 
 void main() {
+  // ИНИЦИАЛИЗАЦИЯ FIREBASE УДАЛЕНА ДЛЯ ТЕСТА
+  // await Firebase.initializeApp();
+
   runApp(const PhoenixApp());
 }
 
@@ -14,7 +17,7 @@ class PhoenixApp extends StatelessWidget {
       title: 'Phoenix',
       debugShowCheckedModeBanner: false,
       routerConfig: appRouter,
-      theme: ThemeData(useMaterial3: true, fontFamily: 'Arial'),
+      theme: ThemeData.dark(), // Темная тема по умолчанию для красоты
     );
   }
 }
