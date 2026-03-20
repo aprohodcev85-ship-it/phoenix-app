@@ -8,41 +8,37 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v4
-
-      - name: ☕ Setup Java
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-          # Добавляем вот эту строку, чтобы Gradle подхватил Java 17:
-          java-package: jdk
-
-      - name: 🎯 Setup Flutter
-        uses: subosito/flutter-action@v2
+      
+      - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.22.0'
           channel: 'stable'
-
-      - name: 📦 Get dependencies
-        run: flutter pub get
-
-      - name: 🔑 Fix Permissions
-        run: chmod +x android/gradlew
-
-      - name: 🔧 Build APK
-        run: flutter build apk --release --no-tree-shake-icons
+      
+      - run: flutter pub get
+      
+      # Ключевой шаг: отключаем Gradle Daemon и file watcher
+      - run: flutter build apk --release
         env:
-          GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=false"
-
-      - name: 📂 Show APK path
-        run: find build/app/outputs/flutter-apk -name "*.apk"
-
-      - name: ⬆️ Upload APK
-        uses: actions/upload-artifact@v4
+          GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dfile.encoding=UTF-8"
+          GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
+      
+      # Ищем APK во всех возможных местах
+      - name: Find APK
+        run: |
+          echo "=== Searching for APK ==="
+          find . -name "*.apk" -type f 2>/dev/null || true
+      
+      - uses: actions/upload-artifact@v4
         with:
           name: phoenix-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
+          if-no-files-found: warn
