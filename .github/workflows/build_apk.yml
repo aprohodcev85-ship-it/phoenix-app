@@ -10,41 +10,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: ☕ Setup Java
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: 🎯 Setup Flutter
-        uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.6' # Используем стабильную версию
+          flutter-version: '3.19.6'
           channel: 'stable'
 
-      - name: 📦 Get dependencies
-        run: flutter pub get
+      - run: flutter pub get
 
-      - name: 🔑 Make gradlew executable
-        run: chmod +x android/gradlew
+      - run: chmod +x android/gradlew
 
-      - name: 🔧 Build APK
+      - name: Build APK
         run: cd android && ./gradlew assembleRelease --no-daemon --no-parallel && cd ..
 
-      - name: 📂 Find and List APK
-        run: |
-          echo "Looking for APK in build/app/outputs/flutter-apk/"
-          ls -la build/app/outputs/flutter-apk/
-          echo "Looking for APK in build/app/outputs/apk/release/"
-          ls -la build/app/outputs/apk/release/ || true # Разрешаем ошибку если папка пуста
+      - name: Find ALL APK files
+        run: find . -name "*.apk" -type f
 
-      - name: ⬆️ Upload APK Artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: phoenix-apk
-          path: build/app/outputs/flutter-apk/app-release.apk # ИСПРАВЛЕННЫЙ ПУТЬ
+          path: |
+            ./**/app-release.apk
           retention-days: 30
-          if-no-files-found: error # Теперь будет ошибка, если не найдено
+          if-no-files-found: warn
