@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     
     steps:
       - uses: actions/checkout@v4
@@ -17,28 +17,32 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       
+      # Используем стабильную версию Flutter 3.19.6
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.19.6'
           channel: 'stable'
       
       - run: flutter pub get
       
-      # Ключевой шаг: отключаем Gradle Daemon и file watcher
-      - run: flutter build apk --release
-        env:
-          GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dfile.encoding=UTF-8"
-          GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
+      # Собираем через Gradle напрямую, минуя Flutter wrapper
+      - name: Build APK with Gradle
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon --no-parallel
+          cd ..
       
-      # Ищем APK во всех возможных местах
       - name: Find APK
         run: |
           echo "=== Searching for APK ==="
-          find . -name "*.apk" -type f 2>/dev/null || true
+          find . -name "app-release.apk" -type f
+          ls -la build/app/outputs/apk/release/ 2>/dev/null || echo "Not found in standard path"
+          ls -la build/app/outputs/flutter-apk/ 2>/dev/null || echo "Not found in flutter-apk path"
       
       - uses: actions/upload-artifact@v4
         with:
           name: phoenix-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/apk/release/app-release.apk
           retention-days: 30
           if-no-files-found: warn
