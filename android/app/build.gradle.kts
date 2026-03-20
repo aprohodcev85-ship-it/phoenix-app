@@ -1,21 +1,24 @@
-plugins {
-    id("com.android.application")
-    id("kotlin-android")
-    id("dev.flutter.flutter-gradle-plugin")
-}
-
 android {
     namespace = "com.phoenix.app"
     compileSdk = 34
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_18
-        targetCompatibility = JavaVersion.VERSION_18
+        // Указываем Java 17 везде
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
+        // Указываем Kotlin JVM target 17
         jvmTarget = "17"
+    }
+
+    // Добавляем вот этот блок для синхронизации всех задач
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+        kotlinOptions {
+            jvmTarget = "17"
+        }
     }
 
     defaultConfig {
@@ -29,16 +32,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            isShrinkResources = false
-            signingConfig = null 
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
-}
-
-flutter {
-    source = "../.."
-}
-
-dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 }

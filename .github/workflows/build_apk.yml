@@ -18,6 +18,8 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          # Добавляем вот эту строку, чтобы Gradle подхватил Java 17:
+          java-package: jdk
 
       - name: 🎯 Setup Flutter
         uses: subosito/flutter-action@v2
