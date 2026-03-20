@@ -28,11 +28,9 @@ android {
 
     buildTypes {
         release {
-            // Временно отключаем минификацию для быстрой сборки
             isMinifyEnabled = false
             isShrinkResources = false
-            
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = null 
         }
     }
 }
