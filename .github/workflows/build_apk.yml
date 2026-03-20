@@ -8,26 +8,46 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      
-      - uses: actions/setup-java@v4
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-      
-      - uses: subosito/flutter-action@v2
+
+      - name: 🎯 Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.22.0'
           channel: 'stable'
-      
-      - run: flutter pub get
-      
-      # Собираем не просто APK, а Bundle/APK с флагами для CI
-      - run: flutter build apk --release --no-shrink --verbose
-      
-      - name: Upload APK
+
+      - name: 📦 Get dependencies
+        run: flutter pub get
+
+      - name: 🧹 Clean
+        run: |
+          flutter clean
+          cd android && ./gradlew clean --no-daemon && cd ..
+
+      - name: 🔧 Build APK (No Daemon)
+        run: flutter build apk --release --no-shrink --no-tree-shake-icons
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=false"
+
+      - name: 📂 Show generated APK
+        run: |
+          echo "=== APK Search Result ==="
+          find build -name "*.apk" 2>/dev/null || echo "No APK found!"
+          ls -la build/app/outputs/flutter-apk/ 2>/dev/null || echo "Directory not found"
+
+      - name: ⬆️ Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: phoenix-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
+          if-no-files-found: warn
