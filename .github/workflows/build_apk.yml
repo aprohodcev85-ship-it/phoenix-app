@@ -28,26 +28,19 @@ jobs:
       - name: 📦 Get dependencies
         run: flutter pub get
 
-      - name: 🧹 Clean
-        run: |
-          flutter clean
-          cd android && ./gradlew clean --no-daemon && cd ..
+      - name: 🔑 Fix Permissions
+        run: chmod +x android/gradlew
 
-      - name: 🔧 Build APK (No Daemon)
-        run: flutter build apk --release --no-shrink --no-tree-shake-icons
+      - name: 🔧 Build APK
+        run: flutter build apk --release --no-tree-shake-icons
         env:
           GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=false"
 
-      - name: 📂 Show generated APK
-        run: |
-          echo "=== APK Search Result ==="
-          find build -name "*.apk" 2>/dev/null || echo "No APK found!"
-          ls -la build/app/outputs/flutter-apk/ 2>/dev/null || echo "Directory not found"
+      - name: 📂 Show APK path
+        run: find build/app/outputs/flutter-apk -name "*.apk"
 
       - name: ⬆️ Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: phoenix-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-          retention-days: 30
-          if-no-files-found: warn
