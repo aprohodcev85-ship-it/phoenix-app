@@ -28,9 +28,20 @@ android {
 
     buildTypes {
         release {
+            // Явно отключаем всё сжатие
             isMinifyEnabled = false
+            isShrinkResources = false
+            
+            // Отключаем псевдо-локализацию
+            isPseudoLocalesEnabled = false
+            
             signingConfig = signingConfigs.getByName("debug")
         }
+    }
+    
+    // Добавляем этот блок, чтобы гарантировать отключение сжатия ресурсов
+    aaptOptions {
+        cruncherEnabled = false
     }
 }
 
