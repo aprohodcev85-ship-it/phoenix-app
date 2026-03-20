@@ -41,11 +41,11 @@ jobs:
         run: |
           flutter build apk --release
           echo "Checking build directory..."
-          ls -la build/app/outputs/apk/release/
+          ls -la build/app/outputs/flutter-apk/
       
       - name: ⬆️ Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: phoenix-apk
-          path: build/app/outputs/apk/release/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk # ВОТ ЗДЕСЬ ИСПРАВЛЕНИЕ
           retention-days: 30
