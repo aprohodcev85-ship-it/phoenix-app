@@ -10,32 +10,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - uses: subosito/flutter-action@v2
+      - name: 🎯 Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.19.6'
           channel: 'stable'
 
-      - run: flutter pub get
+      - name: 📦 Get dependencies
+        run: flutter pub get
 
-      - run: chmod +x android/gradlew
+      - name: 🔧 Build APK
+        run: flutter build apk --release --no-tree-shake-icons
 
-      - name: Build APK
-        run: cd android && ./gradlew assembleRelease --no-daemon --no-parallel && cd ..
+      - name: 📂 Show APK location
+        run: find build -name "*.apk" -type f || echo "APK not found"
 
-      - name: Find ALL APK files
-        run: find . -name "*.apk" -type f
-
-      - uses: actions/upload-artifact@v4
+      - name: ⬆️ Upload APK
+        uses: actions/upload-artifact@v4
         with:
           name: phoenix-apk
-          path: |
-            ./**/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
-          if-no-files-found: warn
