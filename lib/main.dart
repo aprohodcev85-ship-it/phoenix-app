@@ -8,7 +8,6 @@ void main() async {
 
   try {
     if (kIsWeb) {
-      // Для Web нужны явные параметры
       await Firebase.initializeApp(
         options: const FirebaseOptions(
           apiKey: "AIzaSyDC5enK5JH9HtdL0pQO3yzPHZzmEi-dzvA",
@@ -20,12 +19,11 @@ void main() async {
         ),
       );
     } else {
-      // Для Android/iOS — автоматически через google-services.json
       await Firebase.initializeApp();
     }
-    debugPrint('Firebase initialized successfully');
+    debugPrint('✅ Firebase initialized successfully');
   } catch (e) {
-    debugPrint('Firebase init error: $e');
+    debugPrint('❌ Firebase init error: $e');
   }
 
   runApp(const PhoenixApp());
@@ -40,6 +38,10 @@ class PhoenixApp extends StatelessWidget {
       title: 'Phoenix',
       debugShowCheckedModeBanner: false,
       routerConfig: appRouter,
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: const Color(0xFF1E3A5F),
+        primaryColor: const Color(0xFFFF6B35),
+      ),
     );
   }
 }
