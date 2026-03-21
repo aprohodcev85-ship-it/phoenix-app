@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace "com.phoenix.app"
+    namespace "com.phoenix.phoenix"
     compileSdk 34
 
     compileOptions {
