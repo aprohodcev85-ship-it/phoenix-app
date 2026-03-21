@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   final String selectedRole;
@@ -22,25 +23,38 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   IconData get roleIcon {
-    return widget.selectedRole == 'carrier' 
-        ? Icons.local_shipping_rounded 
+    return widget.selectedRole == 'carrier'
+        ? Icons.local_shipping_rounded
         : Icons.inventory_2_rounded;
   }
 
   Color get roleColor {
-    return widget.selectedRole == 'carrier' 
-        ? const Color(0xFFFF6B35) 
+    return widget.selectedRole == 'carrier'
+        ? const Color(0xFFFF6B35)
         : const Color(0xFF2ECC71);
   }
 
-  void _login() {
+  void _login() async {
+    if (_phoneController.text.isEmpty || _passwordController.text.isEmpty)
+      return;
+
     setState(() => _isLoading = true);
-    Future.delayed(const Duration(seconds: 1), () {
+    try {
+      // Входим по номеру телефона (через виртуальный email)
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: "${_phoneController.text.replaceAll('+', '')}@phoenix.com",
+        password: _passwordController.text,
+      );
+
+      if (mounted) context.go('/home');
+    } catch (e) {
       if (mounted) {
-        setState(() => _isLoading = false);
-        context.go('/home');
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Неверный телефон или пароль')));
       }
-    });
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   void _changeRole() {
@@ -77,7 +91,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           const Text(
                             'Вы выбрали роль',
-                            style: TextStyle(color: Colors.white70, fontSize: 13),
+                            style:
+                                TextStyle(color: Colors.white70, fontSize: 13),
                           ),
                           Text(
                             roleTitle,
@@ -106,23 +121,35 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: Column(
                   children: [
-                    const Icon(Icons.local_fire_department_rounded, size: 70, color: Color(0xFFFF6B35)),
+                    const Icon(Icons.local_fire_department_rounded,
+                        size: 70, color: Color(0xFFFF6B35)),
                     const SizedBox(height: 12),
-                    const Text('PHOENIX', style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold, letterSpacing: 3)),
+                    const Text('PHOENIX',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 3)),
                   ],
                 ),
               ),
 
               const SizedBox(height: 40),
 
-              const Text('Вход в аккаунт', style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w700)),
+              const Text('Вход в аккаунт',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w700)),
               const SizedBox(height: 8),
-              const Text('Введите данные для входа', style: TextStyle(color: Colors.white70, fontSize: 15)),
+              const Text('Введите данные для входа',
+                  style: TextStyle(color: Colors.white70, fontSize: 15)),
 
               const SizedBox(height: 32),
 
               // Поля ввода (телефон и пароль)
-              const Text('Номер телефона', style: TextStyle(color: Colors.white70, fontSize: 14)),
+              const Text('Номер телефона',
+                  style: TextStyle(color: Colors.white70, fontSize: 14)),
               const SizedBox(height: 8),
               TextField(
                 controller: _phoneController,
@@ -133,14 +160,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintStyle: const TextStyle(color: Colors.white38),
                   filled: true,
                   fillColor: Colors.white.withOpacity(0.1),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none),
                   prefixIcon: const Icon(Icons.phone, color: Colors.white54),
                 ),
               ),
 
               const SizedBox(height: 20),
 
-              const Text('Пароль', style: TextStyle(color: Colors.white70, fontSize: 14)),
+              const Text('Пароль',
+                  style: TextStyle(color: Colors.white70, fontSize: 14)),
               const SizedBox(height: 8),
               TextField(
                 controller: _passwordController,
@@ -151,11 +181,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintStyle: const TextStyle(color: Colors.white38),
                   filled: true,
                   fillColor: Colors.white.withOpacity(0.1),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none),
                   prefixIcon: const Icon(Icons.lock, color: Colors.white54),
                   suffixIcon: IconButton(
-                    icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, color: Colors.white54),
-                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                    icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: Colors.white54),
+                    onPressed: () =>
+                        setState(() => _obscurePassword = !_obscurePassword),
                   ),
                 ),
               ),
@@ -169,11 +206,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: _isLoading ? null : _login,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFF6B35),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16)),
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Войти', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+                      : const Text('Войти',
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.w600)),
                 ),
               ),
 
@@ -182,10 +222,14 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Нет аккаунта?', style: TextStyle(color: Colors.white70)),
+                  const Text('Нет аккаунта?',
+                      style: TextStyle(color: Colors.white70)),
                   TextButton(
                     onPressed: () => context.push('/register'),
-                    child: const Text('Зарегистрироваться', style: TextStyle(color: Color(0xFFFF6B35), fontWeight: FontWeight.w600)),
+                    child: const Text('Зарегистрироваться',
+                        style: TextStyle(
+                            color: Color(0xFFFF6B35),
+                            fontWeight: FontWeight.w600)),
                   ),
                 ],
               ),

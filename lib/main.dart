@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'routes.dart';
 
-void main() {
-  // ИНИЦИАЛИЗАЦИЯ FIREBASE УДАЛЕНА ДЛЯ ТЕСТА
-  // await Firebase.initializeApp();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyDC5enK5JH9HtdL0pQO3yzPHZzmEi-dzvA",
+      authDomain: "phoenix-logistics-710ad.firebaseapp.com",
+      projectId: "phoenix-logistics-710ad",
+      storageBucket: "phoenix-logistics-710ad.firebasestorage.app",
+      messagingSenderId: "834086078158",
+      appId: "1:834086078158:web:3c71652341b9982c86f29f",
+    ),
+  );
 
   runApp(const PhoenixApp());
 }
@@ -17,7 +28,6 @@ class PhoenixApp extends StatelessWidget {
       title: 'Phoenix',
       debugShowCheckedModeBanner: false,
       routerConfig: appRouter,
-      theme: ThemeData.dark(), // Темная тема по умолчанию для красоты
     );
   }
 }

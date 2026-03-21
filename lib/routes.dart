@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'splash/splash_screen.dart';
 import 'onboarding/onboarding_screen.dart';
@@ -56,7 +57,18 @@ final GoRouter appRouter = GoRouter(
     // Главный экран
     GoRoute(
       path: '/home',
-      builder: (_, __) => const HomeScreen(),
+      builder: (context, state) {
+        // Проверяем, вошел ли пользователь
+        if (FirebaseAuth.instance.currentUser == null) {
+          // Если нет — перенаправляем на вход
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.go('/login');
+          });
+          return const Scaffold(
+              body: Center(child: CircularProgressIndicator()));
+        }
+        return const HomeScreen();
+      },
     ),
 
     // Поиск грузов
@@ -97,20 +109,20 @@ final GoRouter appRouter = GoRouter(
     ),
 
     GoRoute(
-     path: '/add-transport',
-     builder: (_, __) => const AddTransportScreen(),
+      path: '/add-transport',
+      builder: (_, __) => const AddTransportScreen(),
     ),
 
     GoRoute(
-    path: '/chats',
-    builder: (_, __) => const ChatListScreen(),
+      path: '/chats',
+      builder: (_, __) => const ChatListScreen(),
     ),
-GoRoute(
-    path: '/chat/:id',
-    builder: (context, state) {
-      final chatId = state.pathParameters['id']!;
-      return ChatScreen(chatId: chatId);
-     },
+    GoRoute(
+      path: '/chat/:id',
+      builder: (context, state) {
+        final chatId = state.pathParameters['id']!;
+        return ChatScreen(chatId: chatId);
+      },
     ),
   ],
 );
